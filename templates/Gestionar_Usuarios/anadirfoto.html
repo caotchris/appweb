@@ -1,0 +1,76 @@
+{% extends 'indexadmin.html' %}
+{% block titulo%}
+In
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Información</strong>
+  </div>
+
+  <div class="card-header text-center">
+
+   {% for a in agente %}
+
+  <img height="100" width="100" src="./../media/{{a.fotoA}}">{{a.Nombres}} {{a.Apellidos}} <br>
+  <i>{{ced.Agente.Cedula}}</i></td>
+
+  {{ "<!--" }}
+  {% endfor %}
+  {{ "-->" }}
+
+</div>
+
+  <table class="table" frame="void" rules="none"  align="center" cellspacing="0" cellpadding="0" bordercolor="#ffffff" border="0" style="width: 1500px;">
+    <thead class="thead-dark">
+      <tr>
+        <th>Cédula Agente</th>
+        <th>Nombres</th>
+        <th>Código</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ced in agente %}
+      <tr>
+        <td>{{ ced.Cedula }}</td>
+        <td>{{ ced.Nombres }} {{ ced.Apellidos }}</td>
+        <td>{{ ced.Codigo_Agente }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">{{ message|safe }}</div>
+  {% endfor %}
+  {% endif %}
+</div>
+<form method="POST" enctype="multipart/form-data" style="margin-left:50em; background-color:#F0F5A1">
+  {% csrf_token %}
+  <div class="card-body card-block">
+  <form action="#" method="post" enctype="multipart/form-data" class="form-horizontal text-center">
+    &nbsp &nbsp
+    <div class="row form-group">
+      <i style="color:#FF0000">Añadir foto de perfil</i>
+    </div>
+    <div class="row form-group">
+      <div class="col-xs-12 col-md-4">Añadir foto:{{agente_form.fotoA}}</div>
+    </div>
+    <div class="text-center">
+      &nbsp &nbsp &nbsp &nbsp
+      <button type="submit" class="btn btn-primary" style="background-color:#5e2129">Guardar</button>
+    </div>
+  </form>
+</div>
+</form>
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/home/">
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

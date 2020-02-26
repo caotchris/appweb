@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+{% block titulo %}
+  COIP
+{% endblock titulo %}
+{% block body %}
+  {% if error %}
+    <h2>{{ error }}</h2>
+  {% else %}
+      <div class="card">
+          <div class="card-header">
+              <strong>Formulario de Registro/Artículos COIP</strong>
+          </div>
+          <form method="POST">
+            {% csrf_token %}
+          <div class="card-body card-block">
+              <form action="#" method="post" enctype="multipart/form-data" class="form-horizontal">
+                  <div class="row form-group">
+                    <div class="col col-md-3">{{form.Id_Articulo.label}}</div>
+                    <div class="col-12 col-md-9">{{form.Id_Articulo}}</div>
+                  </div>
+                  <div class="row form-group">
+                      <div class="col col-md-3">{{form.Articulo.label}}</div>
+                      <div class="col-12 col-md-9">{{ form.Articulo }}</div>
+                  </div>
+                  <div class="row form-group">
+                      <div class="col col-md-3">{{form.Inciso.label}}</div>
+                      <div class="col-12 col-md-9">{{form.Inciso}}</div>
+                  </div>
+                  <div class="row form-group">
+                      <div class="col col-md-3">{{form.Numeral.label}}</div>
+                      <div class="col-12 col-md-9">{{form.Numeral}}</div>
+                  </div>
+                  <div class="text-center">
+                      <button type="submit" class="btn btn-primary">Registrar</button>
+                      <button type="reset" class="btn btn-danger">Cancelar</button>
+                  </div>
+              </form>
+          </div>
+        </form>
+      </div>
+  {% endif %}
+
+  {% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

@@ -1,0 +1,59 @@
+{% extends 'index.html' %}
+{% block titulo%}
+Vehículos
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Consulta de vehiculos </strong><i>(Buscar por placa del vehículo)</i>
+  </div>
+  <div class="card-body card-block text-center">
+    <form action="#" method="post" enctype="multipart/
+    form-data" class="form-horizontal">
+    {% csrf_token %}
+    <div class="form-group text-center">
+        <input type="text" name="Placa" placeholder="Numero placa"/ >
+        <input type="submit" value="Buscar" class="btn btn-primary" style="background-color:#5e2129">
+
+    </div>
+  </form>
+  <table class="table" frame="void" rules="none"  align="center" cellspacing="0" cellpadding="0" bordercolor="#ffffff" border="0" style="width: 1500px;">
+    <thead class="thead-dark">
+      <tr>
+        <th>Placa</th>
+        <th>Marca</th>
+        <th>Tipo</th>
+        <th>Color</th>
+        <th>Fecha de matricula</th>
+        <th>Fecha de caducidad</th>
+
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in vehiculo %}
+      <tr>
+        <td>{{ v.Placa }}</td>
+        <td>{{ v.Marca }}</td>
+        <td>{{ v.Tipo }}</td>
+        <td>{{ v.Color }}</td>
+        <td>{{ v.FechaMatricula }}</td>
+        <td>{{ v.FechaCaducidadMatricula }}</td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+  </div>
+</div>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

@@ -1,0 +1,85 @@
+{% extends 'indexadmin.html' %}
+{% block titulo%}
+Registro Usuarios
+{% endblock titulo%}
+{% block body %}
+<div class="card-header text-center">
+<br>
+<h2>Registro de usuarios</h2>
+<h5>Agente administrativo</h5>
+</div>
+<div class="card-header text-center">
+<form form action="#" method="post" enctype="multipart/form-data" class="form-horizontal" style="margin-left:850px">
+	{% csrf_token %}
+
+	<div class="row">
+		<div class="col-xs-12 col-md-3">
+			<div class="form-group text-center">
+				<label class="text-center">Nombre</label>
+				<input class="form-control" type="text" name="first_name">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-3">
+			<div class="form-group">
+				<label >Apellidos</label>
+				<input class="form-control" type="text" name="last_name">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-3">
+			<div class="form-group">
+				<label >Nombre de usuario</label>
+				<input class="form-control" type="text" name="username">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-3">
+			<div class="form-group">
+				<label >Correo</label>
+				<input class="form-control" type="text" name="email">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-3">
+			<div class="form-group">
+				<label >Contraseña</label>
+				<input class="form-control" type="password" name="password1">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-3">
+			<div class="form-group">
+				<label >Confirmar contraseña</label>
+				<input class="form-control" type="password" name="password2">
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-md-3">
+			<div class="form-group">
+				<button class="btn btn-primary "type="submit" style="background-color:#5e2129; color:#FFFFFF">Guardar</button>
+			</div>
+		</div>
+	</div>
+
+</form>
+</div>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/home/">
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+
+{% endblock body %}

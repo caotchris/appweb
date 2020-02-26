@@ -1,0 +1,85 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block titulo%}
+Ingreso de reportes
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Ubicación</strong>
+  </div>
+
+</div>
+
+<form method="POST" style="margin-top:0em;  margin-left: 55em;" enctype="multipart/form-data">
+            {% csrf_token %}
+          <div class="card-body card-block">
+              <form action="#" method="post" enctype="multipart/form-data" class="form-horizontal text-center">
+
+                  &nbsp &nbsp
+                  <div class="row form-group">
+                    <div class="col-xs-12 col-md-4">Seleccione una imagen:{{fotoform.model_pic}}</div>
+                  </div>
+                  &nbsp &nbsp
+                  <div class="row form-group">
+                    <div class="col-xs-12 col-md-4">Seleccione un audio:{{audform.model_aud}}</div>
+                  </div>
+                  &nbsp &nbsp
+                  <div class="row form-group">
+                    <div class="col-xs-12 col-md-4">Seleccione un video:{{vidform.model_vid}}</div>
+                  </div>
+
+
+                  <div class="text-center" style="margin-top:2em;  margin-right: 50em;">
+                      &nbsp &nbsp &nbsp &nbsp
+                      <button type="submit" class="btn btn-primary" style="background-color:#5e2129">Guardar</button>
+                  </div>
+              </form>
+  </div>
+</form>
+
+
+<div id='map'  style="width: 40%; height: 860px;margin-top:2em"></div>
+
+<script type="text/javascript">
+  mapboxgl.accessToken = 'pk.eyJ1IjoidWNvdCIsImEiOiJjanlxMWRpd3AwZmxvM2RtdWFmdzBpdTd6In0.JqU3fJcJP__fO28mMYnYWg';
+</script>
+
+<script type="text/javascript">
+  var cont  =0
+
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [-79.2042236,-3.99313],
+    zoom: 10
+  });
+
+  {% for a in accidente %}
+  var latitud = "{{a.Longitud }}"
+  var longitud = "{{a.Latitud }}"
+
+  var popup = new mapboxgl.Popup({ offset: 25 }).setText(
+    "Número accidente: {{a.NumeroAccidente}}"+" // Tipo: {{a.TipoAccidente}}"+" // Fecha: {{a.Fecha}}"
+);
+
+  var marker = new mapboxgl.Marker({
+    "color": "#b40219",
+    draggable: false,
+  })
+  .setLngLat([latitud.replace(",","."),longitud.replace(",",".")])
+  .setPopup(popup)
+  .addTo(map);
+  {% endfor %}
+</script>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

@@ -1,0 +1,74 @@
+{% extends 'index.html' %}
+{% block titulo%}
+  Multimedia
+{% endblock titulo%}
+{% block body %}
+ <div class="card-body card-block text-center">
+  <h2>Consulta multimedia</h2>
+  <h5>Multimedia</h5>
+</div>
+  <br> <br>
+  <div>
+    <table class="table" >
+      <thead class="thead-dark">
+        <tr>
+          <th>Imagenes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in evidencia %}
+        <tr>
+          <td> <img height="300" width="300" src="./../media/{{data.model_pic}}">{{data.model_pic}</td>
+        {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+      </div>
+
+      <div >
+        <table class="table" >
+          <thead class="thead-dark">
+            <tr>
+              <th>Audio</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for dataa in evidenciaa %}
+            <tr>
+              <td><audio controls src="./../media/{{dataa.model_aud}}">{{dataa.model_aud}</audio></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div >
+        <table class="table" >
+          <thead class="thead-dark">
+            <tr>
+              <th>Video</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for datav in evidenciav %}
+            <tr>
+              <td>
+              <video width="100%" height="auto" maxwidth:100% autoplay maxwidth:100% controls>
+              <source src="./../media/{{datav.model_vid}}">{{datav.model_vid}}</video>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+{% if user.groups.all.0.name == "Juez" %}
+
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

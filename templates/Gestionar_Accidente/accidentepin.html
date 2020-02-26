@@ -1,0 +1,69 @@
+{% extends 'index.html' %}
+{% block titulo%}
+Accidente
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Información</strong>
+  </div>
+
+  <div class="card-header text-center">
+    <h1 style="color:#EF0000">DETALLES</h1>
+  </div>
+
+  <table class="table" frame="void" rules="none"  align="center" cellspacing="0" cellpadding="0" bordercolor="#ffffff" border="0" style="width: 1500px;">
+    <thead class="thead-dark">
+      <tr>
+        <th>Numero de Accidente</th>
+        <th>Tipo de Accidente</th>
+        <th>Descripción</th>
+        <th>Ubicación</th>
+        <th>Fecha</th>
+        <th>Hora registro</th>
+        <th>Hora de accidente</th>
+        <th>Agente de tránsito</th>
+        <th>Cédula agente</th>
+        <th>Ver multimedia</th>
+        <th>Ver en mapa</th>
+        <th>Ingresar evidencias</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {%for i in accidente%}
+        <tr>
+          <td>{{ i.NumeroAccidente}}</td>
+          <td>{{ i.TipoAccidente }}</td>
+          <td>{{ i.Descripcion}}</td>
+          <td>{{ i.Ubicacion}}</td>
+          <td>{{ i.Fecha }}</td>
+          <td>{{ i.Hora_Registro }}</td>
+          <td>{{ i.Hora_Accidente }}</td>
+          <td>{{ i.Agente.Nombres }} {{ i.Agente.Apellidos }}</td>
+          <td>{{ i.Agente.Cedula }}</td>
+          <td>
+            <div class="text-center">
+              <a href="/Gestionar_Evidencia/listarEvidenciaa/?Accidente_Transito={{i.NumeroAccidente}}"><button style="background-color: #FF9900"  type="submit" class="btn btn-primary">Buscar</button></a>
+            </div></td>
+
+          <td><a href="/Gestionar_Accidente/mapaAccidente/?Accidente_Transito={{i.NumeroAccidente}}"><button style="background-color: #22DCDF"  type="submit" class="btn btn-primary">Ver</button></a></td>
+          <td><a href="/Gestionar_Accidente/Reportesadicionara/?Accidente_Transito={{i.NumeroAccidente}}"><button style="background-color: #DF2222"  type="submit" class="btn btn-primary">Ingresar</button></a></td>
+          </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+
+  </div>
+</div>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

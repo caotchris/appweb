@@ -1,0 +1,139 @@
+{% extends 'indexjuez.html' %}
+{% block titulo%}
+  Infracciones de transito
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Consultar infracciones </strong>
+  </div>
+<div class="card-body card-block text-center">
+  <form method="POST">
+    {% csrf_token %}
+  <div class="card-body card-block text-center">
+      <form action="#" method="post" enctype="multipart/form-data" class="form-horizontal">
+          <div class="form-group text-center">
+            <input type="number" name="NumeroInfraccion" placeholder="Numero de Infraccion"/ >
+            <input type="submit" value="Filtrar" class="btn btn-primary" style="background-color:#5e2129">
+            &nbsp &nbsp &nbsp &nbsp
+            <input type="number" name="Conductor" placeholder="Cédula Conductor"/ >
+            <input type="submit" value="Filtrar" class="btn btn-primary" style="background-color:#5e2129">
+            &nbsp &nbsp &nbsp &nbsp
+            <input type="text" name="Vehiculo"   placeholder="Placa"/ >
+            <input type="submit" value="Filtrar" class="btn btn-primary" style="background-color:#5e2129">
+            &nbsp &nbsp &nbsp &nbsp
+            <i style="color:#FF0000";>FECHA:</i>
+            &nbsp &nbsp
+            <i>Fecha inicio</i>
+            <input type="date" id="FechaInicio" name="FechaInicio"   placeholder="Fecha Inicio"/ >
+            &nbsp &nbsp
+            <i>Fecha fin</i>
+            <input type="date" id="FechaFin" name="FechaFin"   placeholder="Fecha Fin"/ >
+            <input type="submit" value="Filtrar" class="btn btn-primary" style="background-color:#5e2129">
+
+
+          </div>
+
+      </form>
+
+  </div>
+</form>
+
+<table class="table" style="margin-top:47em; background-color:#F4EAE8">
+    <thead class="thead-dark">
+        <tr>
+          <th>Numero de infracción</th>
+          <th>Vehículo</th>
+          <th>Marca Vehículo</th>
+          <th>Cédula Conductor</th>
+          <th>Nombre Conductor</th>
+          <th>Descripción</th>
+          <th>Ubicación</th>
+          <th>Estado</th>
+          <th>Fecha infracción</th>
+          <th>Hora infracción</th>
+          <th>Artículo</th>
+          <th>Inciso</th>
+          <th>Numeral</th>
+          <th>Ver multimedia</th>
+          <th>Nombre agente</th>
+          <th>Cédula agente</th>
+          <th>Ver Mapa</th>
+        </tr>
+    </thead>
+    <tbody>
+      {%for i in infraccion%}
+        <tr>
+          <td>{{ i.NumeroInfraccion}}</td>
+          <td>{{ i.Vehiculo.Placa}}</td>
+          <td>{{ i.Vehiculo.Marca}}</td>
+          <td>{{ i.Conductor.CedulaC}}</td>
+          <td>{{ i.Conductor.Nombres}} {{i.Conductor.Apellidos}}</td>
+          <td>{{ i.Descripcion }}</td>
+          <td>{{ i.Ubicacion}}</td>
+          <td>{{ i.Estado}}</td>
+          <td>{{ i.Fecha_Infraccion }}</td>
+          <td>{{ i.Hora_Infraccion }}</td>
+          <td>{{ i.ArticuloC.Articulo }}</td>
+          <td>{{ i.ArticuloC.Inciso }}</td>
+          <td>{{ i.ArticuloC.Numeral }}</td>
+          <td>
+            <div class="text-center">
+              <a href="/Gestionar_Evidencia/listarEvidencia/?Infraccion_Transito={{i.NumeroInfraccion}}"><button style="background-color: #FF9900"  type="submit" class="btn btn-primary">Buscar</button></a>
+            </div>
+          </td>
+          <td>{{ i.Agente.Nombres }} {{ i.Agente.Apellidos }}</td>
+          <td>{{ i.Agente.Cedula }}</td>
+          <td><a href="/Gestionar_Infraccion/mapaInfraccion/?Infraccion_Transito={{i.NumeroInfraccion}}"><button style="background-color: #FF9900"  type="submit" class="btn btn-primary">Ver</button></a></td>
+        </tr>
+      {%endfor%}
+    </tbody>
+</table>
+</div>
+</div>
+
+
+ <div id='map'  style="width: 102%; height: 700px; margin-top:8em"></div>
+<script type="text/javascript">
+  mapboxgl.accessToken = 'pk.eyJ1IjoidWNvdCIsImEiOiJjanlxMWRpd3AwZmxvM2RtdWFmdzBpdTd6In0.JqU3fJcJP__fO28mMYnYWg';
+</script>
+
+<script type="text/javascript">
+
+
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [-79.2042236,-3.99313],
+    zoom: 10
+  });
+
+  {% for i in infraccion %}
+  var latitud = "{{i.Longitud }}"
+  var longitud = "{{i.Latitud }}"
+
+  var popup = new mapboxgl.Popup({ offset: 25 }).setText(
+    "Número de  infracción: {{i.NumeroInfraccion}}"+" // Conductor: {{ i.Conductor.CedulaC}} {{i.Conductor.Nombres}} {{i.Conductor.Apellidos}}"+" // Vehículo: {{i.Vehiculo.Placa}}"+" // Fecha: {{i.Fecha_Infraccion}}"
+);
+
+
+  var marker = new mapboxgl.Marker({
+    "color": "#07E904",
+    draggable: false
+  })
+  .setLngLat([latitud.replace(",","."),longitud.replace(",",".")])
+  .setPopup(popup)
+  .addTo(map);
+  {% endfor %}
+</script>
+
+{% if user.groups.all.0.name == "Juez" %}
+
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/home/">
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

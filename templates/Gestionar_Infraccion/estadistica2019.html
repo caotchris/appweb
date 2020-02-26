@@ -1,0 +1,55 @@
+{% extends 'index.html' %}
+{% block titulo%}
+Gráfica infracciones
+{% endblock titulo%}
+{% block body %}
+
+ <div class="card-body card-block text-center">
+    <h2>Gráfica anual</h2>
+    <img src="/Gestionar_Infraccion/ploti/" width="900px" />
+  </div>
+
+  <table class="table" style="background-color:#F4EAE8;">
+    <thead class="thead-dark">
+      <tr>
+        <th>Enero</th>
+        <th>Febrero</th>
+        <th>Marzo</th>
+        <th>Abril</th>
+        <th>Mayo</th>
+        <th>Junio</th>
+        <th>Julio</th>
+        <th>Agosto</th>
+        <th>Septiembre</th>
+        <th>Octubre</th>
+        <th>Noviembre</th>
+        <th>Diciembre</th>
+        <th>Total</th>
+        <th>Destalles</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td>{{ enero }}</td>
+        <td>{{ febrero }}</td>
+        <td>{{ marzo }}</td>
+        <td>{{ abril }}</td>
+        <td>{{ mayo }}</td>
+        <td>{{ junio }}</td>
+        <td>{{ julio }}</td>
+        <td>{{ agosto }}</td>
+        <td>{{ septiembre }}</td>
+        <td>{{ octubre }}</td>
+        <td>{{ noviembre }}</td>
+        <td>{{ diciembre }}</td>
+        <td>{{ total }}</td>
+         <td><a href="/Gestionar_Infraccion/exportar_csv/?Ano=2019"><button style="background-color: #DF2222"  type="submit" class="btn btn-primary">Descargar</button></a></td>
+      </tr>
+    
+
+    </tbody>
+  </table>
+
+
+{% endblock body %}

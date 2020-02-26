@@ -1,0 +1,238 @@
+{% load static %}
+<!Doctype html>
+<html class="no-js" lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{% block titulo %}UCOT | LOJA{% endblock titulo %}</title>
+  <link rel="shortcut icon" href="{% static 'images/ucot.png' %}">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
+  <link rel="stylesheet" href="{% static 'css/cs-skin-elastic.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+  <style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:9%; bottom:0; width:100%; }
+  #marker {
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.mapboxgl-popup {
+    max-width: 200px;
+}
+#menu {
+position: absolute;
+background: #EDBFBF;
+padding: 6px;
+font-family: 'Open Sans', sans-serif;
+top: 57px;
+}
+  </style>
+</head>
+
+<body class="open">
+  <!-- Left Panel -->
+  <aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+      <div id="main-menu" class="main-menu">
+        <ul class="nav navbar-nav">
+          <li class="active">
+            <a href="{% url 'index' %}" data-toggle="tooltip" data-placement="right" title="Ir a Inicio"><i class="menu-icon fa fa-home"></i>Inicio</a>
+          </li>
+          <li class="menu-item-has-children dropdown">
+            <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-placement="right" title="Infracciones"> <i class="menu-icon fa fa-edit"></i>INFRACCIONES</a>
+            <ul class="sub-menu children dropdown-menu">
+
+              <li><i class="fa fa-pencil"></i><a href="{% url 'Gestionar_Infraccion:crear_infraccion_transito' %}">Nueva infracción</a></li>
+              <li><i class="fa fa-search"></i><a href="{% url 'Gestionar_Infraccion:consultar_Infraccion' %}">Buscar infracciones</a></li>
+              <li><i class="fa fa-search-plus"></i><a href="{% url 'Gestionar_Infraccion:buscar_Intentos' %}">Consulta de intentos</a></li>
+            </ul>
+          </li>
+          <li class="menu-item-has-children dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-placement="right" title="Accidentes"> <i class="menu-icon fa fa-car"></i>ACCIDENTES</a>
+            <ul class="sub-menu children dropdown-menu">
+              <li><i class="fa fa-search"></i><a href="{% url 'Gestionar_Accidente:crear_accidente_transito' %}">Buscar accidentes</a></li>
+            </ul>
+          </li>
+          <li class="menu-item-has-children dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-placement="right" title="Accidentes"> <i class="menu-icon fa fa-plus-circle"></i>OTRAS CONSULTAS</a>
+            <ul class="sub-menu children dropdown-menu">
+              <li><i class="fa fa-search"></i><a href="{% url 'Gestionar_Informacion:buscar_agente_datos' %}">Agente</a></li>
+
+              <li><i class="fa fa-search"></i><a href="{% url 'Gestionar_Informacion:buscar_vehiculo' %}">Vehículos</a></li>
+
+              <li><i class="fa fa-search"></i><a href="{% url 'Gestionar_Informacion:buscar_conductor' %}">Conductor</a></li>
+
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+  </aside>
+  <!-- /#left-panel -->
+  <!-- Right Panel -->
+  <div id="right-panel" class="right-panel">
+    <!-- Header-->
+    <header id="header" class="header">
+
+      <div class="top-center">
+        <div class="navbar-header" style="margin:0px auto;
+        text-align:center;padding:0">
+        <a id="menuToggle" class="float left pulse menutoggle" data-placement="right" title="Expander menu">
+          <i class="fa fa-angle-double-right my-float"></i>
+        </a>
+        <a class="navbar-brand text-dark" style="vertical-align:middle" href="./"><img src="{% static 'images/ucot.png' %}" style="width:40px" alt="Logo"> UCOT LOJA</a>
+        <a class="float right menutoggle text-danger" href="{% url 'logout' %}" >Cerrar Sesión <i class="fa fa-sign-out"></i></a>
+      </div>
+    </div>
+  </header>
+  {% block body %}
+  <form action="#" method="post" enctype="multipart/
+  form-data" class="form-horizontal">
+  {% csrf_token %}
+  <div class="form-group text-center">
+     <i style="color:#FF0000";>TIPO</i>
+        &nbsp &nbsp
+     <select name="Tipo" value="{{Tipo}}" placeholder="Tipo">
+          <option value="Infracciones">Infracciones</option>
+          <option value="Accidentes">Accidentes</option>
+          <option value="Todos">Todos</option>
+        </select>
+
+      &nbsp &nbsp
+        <i style="color:#FF0000";>SELECCIONE FECHA:</i>
+        &nbsp &nbsp
+        <i>Fecha inicio</i>
+        <input type="date" id="FechaInicio" name="FechaInicio"   placeholder="Fecha Inicio"/>
+        &nbsp &nbsp
+        <i>Fecha fin</i>
+        <input type="date" id="FechaFin" name="FechaFin"   placeholder="Fecha Fin"/>
+
+        <input type="submit" value="Filtrar" class="btn btn-primary" style="background-color:#5e2129">
+&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+         <b style="color:#b40219";>ACCIDENTES</b>&nbsp &nbsp
+         <img src="{% static 'images/pinpin.png' %}" style="width:40px" alt="Logo"></a>
+          &nbsp &nbsp
+        <b style="color:#339848";>INFRACCIONES</b>
+  </div>
+
+
+  <div id='map'></div>
+  <div id="menu">
+  <input
+    id="streets-v11"
+    type="radio"
+    name="rtoggle"
+    value="streets"
+    checked="checked"
+    />
+    <label for="streets">streets</label>
+    <input id="light-v10" type="radio" name="rtoggle" value="light" />
+    <label for="light">light</label>
+    <input id="dark-v10" type="radio" name="rtoggle" value="dark" />
+    <label for="dark">dark</label>
+    <input id="outdoors-v11" type="radio" name="rtoggle" value="outdoors" />
+    <label for="outdoors">outdoors</label>
+    <input id="satellite-v9" type="radio" name="rtoggle" value="satellite" />
+    <label for="satellite">satellite</label>
+</div>
+  <script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoidWNvdCIsImEiOiJjanlxMWRpd3AwZmxvM2RtdWFmdzBpdTd6In0.JqU3fJcJP__fO28mMYnYWg';
+  </script>
+  <script type="text/javascript">
+    var cont  =0
+
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [-79.2042236,-3.99313],
+      zoom: 13
+    });
+
+// Infracciones
+    {% for i in infracciones %}
+    var latitud = "{{i.Longitud }}"
+    var longitud = "{{i.Latitud }}"
+
+    var popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+    "Número de  infracción: {{i.NumeroInfraccion}}"+" <br> Conductor: {{i.Conductor.CedulaC}}"+" <br> {{i.Conductor.Nombres}} {{i.Conductor.Apellidos}}"+" <br> Vehículo: {{i.Vehiculo.Placa}}"+" <br> Fecha: {{i.Fecha_Infraccion}}"+"	<br> <a href=/Gestionar_Infraccion/pinindex/?Infraccion_Transito={{i.NumeroInfraccion}}>VER</a>"
+);
+
+    var marker = new mapboxgl.Marker({
+      "color": "#07E904",
+      draggable: false
+    })
+    .setLngLat([latitud.replace(",","."),longitud.replace(",",".")])
+    .setPopup(popup)
+    .addTo(map);
+    {% endfor %}
+
+//     // Accidentes
+    {% for a in accidentes %}
+    var latitud = "{{a.Longitud }}"
+    var longitud = "{{a.Latitud }}"
+
+    var popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+     "Número accidente: {{a.NumeroAccidente}}"+" <br> Tipo: {{a.TipoAccidente}}"+" <br> Fecha: {{a.Fecha}}"+"	<br> <a href=/Gestionar_Accidente/apinindex/?Accidente_Transito={{a.NumeroAccidente}}>VER</a>"
+);
+
+    var marker = new mapboxgl.Marker({
+      "color": "#b40219",
+      draggable: false
+    })
+    .setLngLat([latitud.replace(",","."),longitud.replace(",",".")])
+    .setPopup(popup)
+    .addTo(map);
+    {% endfor %}
+
+    var layerList = document.getElementById('menu');
+    var inputs = layerList.getElementsByTagName('input');
+
+    function switchLayer(layer) {
+    var layerId = layer.target.id;
+    map.setStyle('mapbox://styles/mapbox/' + layerId);
+    }
+
+    for (var i = 0; i < inputs.length; i++) {
+    inputs[i].onclick = switchLayer;
+    }
+
+  </script>
+
+  {% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+  {% endblock body %}
+  <!-- /.site-footer -->
+</div>
+<!-- /#right-panel -->
+
+<!-- Scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+
+</body>
+</html>

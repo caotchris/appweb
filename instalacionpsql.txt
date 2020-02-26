@@ -1,0 +1,26 @@
+**** intalacion de postgres sql
+
+sudo apt-get install postgresql
+sudo apt-get install python-psycopg2
+sudo apt-get install libpq-dev
+
+
+**** instalacion de heroku
+
+pip install gunicorn
+pip install django-heroku
+
+**** intalacion de rest_framework
+
+pip install djangorestframework
+pip install markdown       
+pip install django-filter  
+
+**** instalacion de Pillow
+pip install Pillow
+
+
+id y no mombre del agente
+filtrado fecha 
+spiner
+

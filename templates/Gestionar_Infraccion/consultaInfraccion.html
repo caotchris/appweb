@@ -1,0 +1,209 @@
+{% extends 'index.html' %}
+{% block titulo%}
+  Infracciones de transito
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>CONSULTA DE INFRACCIONES DE TRANSITO</strong> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+    <i style="color:#FF0000";>Infracciones encontradas: {{contador}} </i>
+  </div>
+<div class="card-body card-block">
+  <form method="POST">
+    {% csrf_token %}
+      <form action="#" method="post" enctype="multipart/form-data" class="form-horizontal">
+          <div class="form-group">
+            <input type="text" name="NumeroInfraccion" placeholder="Numero de Infraccion"/ >
+            &nbsp &nbsp
+            <input type="number" name="Conductor" placeholder="Cédula Conductor"/ >
+            &nbsp &nbsp
+            <input type="text" name="Vehiculo"   placeholder="Placa"/ >
+
+            &nbsp &nbsp
+            <i style="color:#FF0000";>Estado:</i>
+            &nbsp &nbsp
+            <select name="Estado" id="Estado" value="{{Estado}}" placeholder="Estado">
+              <option value="Reportado">Reportado</option>
+              <option value="En impugnación">En impugnación</option>
+              <option value="Impugnada">Impugnada</option>
+              <option value="No impugnada">No impugnada</option>
+              <option value="Pendiente de pago">Pendiente de pago</option>
+              <option value="Pagada">Pagada</option>
+            </select>
+            &nbsp &nbsp
+            &nbsp &nbsp
+            <input type="submit" value="Buscar" class="btn btn-primary" style="background-color:#5e2129">
+            &nbsp &nbsp &nbsp
+            <i style="color:#FF0000";>TIPO/FECHA:</i>
+            &nbsp &nbsp &nbsp
+             <select name="Tipo" id="Tipo" value="{{Tipo}}" placeholder="Estado">
+              <option value="Art. 383.">Llantas en mal estado</option>
+              <option value="Art. 384.">Sustancias estupefacientes</option>
+              <option value="Art. 385.">Estado de embriaguez</option>
+              <option value="Art. 386.">Primera clase</option>
+              <option value="Art. 387.">Segunda clase</option>
+              <option value="Art. 388.">Tercera clase</option>
+              <option value="Art. 389.">Cuarta clase</option>
+              <option value="Art. 390.">Quinta clase</option>
+              <option value="Art. 391.">Sexta clase</option>
+              <option value="Art. 392.">Séptima clase</option>
+              <option value="Todos">Todos</option>
+            </select>
+            &nbsp &nbsp
+            <i>Fecha inicio</i>
+            <input type="date" id="FechaInicio" name="FechaInicio"   placeholder="Fecha Inicio"/ >
+            &nbsp &nbsp
+            <i>Fecha fin</i>
+            <input type="date" id="FechaFin" name="FechaFin"   placeholder="Fecha Fin"/ >
+            <input type="submit" value="Buscar" class="btn btn-primary" style="background-color:#5e2129">
+
+            &nbsp &nbsp &nbsp
+        <a href="/Gestionar_Infraccion/ploteri2020/" class="btn btn-default">Reportes</a>
+          </div>
+      </form>
+</form>
+<table class="table" style="margin-top:46em; background-color:#F4EAE8; width:1500px" frame="void" rules="none" cellspacing="0" cellpadding="0" bordercolor="#ffffff" border="0">
+    <thead class="thead-dark">
+        <tr>
+          <th>Numero de infracción</th>
+          <th>Vehículo</th>
+          <th>Marca Vehículo</th>
+          <th>Tipo Vehículo</th>
+          <th>Color Vehículo</th>
+          <th>Cédula Conductor</th>
+          <th>Nombre Conductor</th>
+          <th>Licencia Conductor</th>
+          <th>Descripción</th>
+          <th>Ubicación</th>
+          <th>Estado</th>
+          <th>Fecha infracción</th>
+          <th>Hora infracción</th>
+          <th>Hora detención</th>
+          <th>Hora de registro</th>
+          <th>Artículo</th>
+          <th>Inciso</th>
+          <th>Numeral</th>
+          <th>Ver multimedia</th>
+          <th>Nombre agente</th>
+          <th>Cédula agente</th>
+          <th>Ver Mapa</th>
+          <th>Detalles</th>
+          <th>Generar reporte</th>
+        </tr>
+    </thead>
+    <tbody>
+      {%for i in infraccion%}
+        <tr>
+          <td>{{ i.NumeroInfraccion}}</td>
+          <td>{{ i.Vehiculo.Placa}}</td>
+          <td>{{ i.Vehiculo.Marca}}</td>
+          <td>{{ i.Vehiculo.Tipo}}</td>
+          <td>{{ i.Vehiculo.Color}}</td>
+          <td>{{ i.Conductor.CedulaC}}</td>
+          <td>{{ i.Conductor.Nombres}} {{i.Conductor.Apellidos}}</td>
+          <td>{{ i.Conductor.TipoLicencia}}</td>
+          <td>{{ i.Descripcion }}</td>
+          <td>{{ i.Ubicacion}}</td>
+          <td>{{ i.Estado}}</td>
+          <td>{{ i.Fecha_Infraccion }}</td>
+          <td>{{ i.Hora_Infraccion }}</td>
+          <td>{{ i.Hora_Detencion }}</td>
+          <td>{{ i.Hora_Registro }}</td>
+          <td>{{ i.ArticuloC.Articulo }}</td>
+          <td>{{ i.ArticuloC.Inciso }}</td>
+          <td>{{ i.ArticuloC.Numeral }}</td>
+          <td>
+            <div class="text-center">
+              <a href="/Gestionar_Evidencia/listarEvidencia/?Infraccion_Transito={{i.NumeroInfraccion}}"><button style="background-color: #FF9900"  type="submit" class="btn btn-primary">Buscar</button></a>
+            </div>
+          </td>
+          <td>{{ i.Agente.Nombres }} {{ i.Agente.Apellidos }}</td>
+          <td>{{ i.Agente.Cedula }}</td>
+          <td><a href="/Gestionar_Infraccion/mapaInfraccion/?Infraccion_Transito={{i.NumeroInfraccion}}"><button style="background-color:#2A90F5"  type="submit" class="btn btn-primary">Ver</button></a></td>
+          <td><a href="/Gestionar_Infraccion/Reportesadicionar/?Infraccion_Transito={{i.NumeroInfraccion}}"><button style="background-color: #DF2222"  type="submit" class="btn btn-primary">Ingresar</button></a></td>
+          <td><a href="/Gestionar_Infraccion/GeneratePdf/?Infraccion_Transito={{i.NumeroInfraccion}}"><button style="background-color: #22CEDF"  type="submit" class="btn btn-primary">Reporte</button></a></td>
+        </tr>
+      {%endfor%}
+    </tbody>
+</table>
+</div>
+</div>
+
+
+ <div id='map'  style="width: 122%; height: 720px; margin-top:6em"></div>
+  <div id="menu">
+  <input
+    id="streets-v11"
+    type="radio"
+    name="rtoggle"
+    value="streets"
+    checked="checked"
+    />
+    <label for="streets">streets</label>
+    <input id="light-v10" type="radio" name="rtoggle" value="light" />
+    <label for="light">light</label>
+    <input id="dark-v10" type="radio" name="rtoggle" value="dark" />
+    <label for="dark">dark</label>
+    <input id="outdoors-v11" type="radio" name="rtoggle" value="outdoors" />
+    <label for="outdoors">outdoors</label>
+    <input id="satellite-v9" type="radio" name="rtoggle" value="satellite" />
+    <label for="satellite">satellite</label>
+</div>
+<script type="text/javascript">
+  mapboxgl.accessToken = 'pk.eyJ1IjoidWNvdCIsImEiOiJjanlxMWRpd3AwZmxvM2RtdWFmdzBpdTd6In0.JqU3fJcJP__fO28mMYnYWg';
+</script>
+
+<script type="text/javascript">
+
+
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [-79.2042236,-3.99313],
+    zoom: 13
+  });
+
+  {% for i in infraccion %}
+  var latitud = "{{i.Longitud }}"
+  var longitud = "{{i.Latitud }}"
+
+  var popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+    "Número de  infracción: {{i.NumeroInfraccion}}"+" <br> Conductor: {{i.Conductor.CedulaC}}"+" <br> {{i.Conductor.Nombres}} {{i.Conductor.Apellidos}}"+" <br> Vehículo: {{i.Vehiculo.Placa}}"+" <br> Fecha: {{i.Fecha_Infraccion}}"+" <br> <a href=/Gestionar_Infraccion/pinindex/?Infraccion_Transito={{i.NumeroInfraccion}}>VER</a>"
+);
+
+
+  var marker = new mapboxgl.Marker({
+    "color": "#07E904",
+    draggable: false
+  })
+  .setLngLat([latitud.replace(",","."),longitud.replace(",",".")])
+  .setPopup(popup)
+  .addTo(map);
+  {% endfor %}
+
+
+    var layerList = document.getElementById('menu');
+    var inputs = layerList.getElementsByTagName('input');
+
+    function switchLayer(layer) {
+    var layerId = layer.target.id;
+    map.setStyle('mapbox://styles/mapbox/' + layerId);
+    }
+
+    for (var i = 0; i < inputs.length; i++) {
+    inputs[i].onclick = switchLayer;
+    }
+
+</script>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+
+{% endblock body %}

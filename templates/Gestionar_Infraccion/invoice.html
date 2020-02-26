@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Reporte de infracción de tránsito</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+        </style>
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'>Reporte de infracción de tránsito</p>
+            </div>
+        <div>
+        <div class='details'>
+            {%for i in infraccion%}
+            <i style="color:#FF0000";>Descripción:</i><br/> 
+            Número de infracción: {{ i.NumeroInfraccion}}<br/>
+            Descripción: {{ i.Descripcion}}<br/>
+            Ubicación: {{ i.Ubicacion}}<br/>
+            Fecha de infracción: {{ i.Fecha_Infraccion}}<br/>
+            Fecha de registro: {{ i.Fecha_Registro}}<br/>
+            Hora de infracción: {{ i.Hora_Infraccion}}<br/>
+            Hora de detención: {{ i.Hora_Detencion}}<br/>
+            Hora de registro: {{ i.Hora_Registro}}<br/><br/>
+
+            <i style="color:#FF0000";>Artículos:</i><br/>
+            Articulo: {{ i.ArticuloC.Articulo }}<br/>
+            Inciso: {{ i.ArticuloC.Inciso }}<br/>
+            Numeral: {{ i.ArticuloC.Numeral }}<br/><br/>
+
+            <i style="color:#FF0000";>Datos del conductor:</i><br/>
+            Cédula: {{ i.Conductor.CedulaC}}<br/>
+            Nombres: {{ i.Conductor.Nombres}}<br/>
+            Apellidos: {{ i.Conductor.Apellidos}}<br/>
+            Tipo de licencia: {{ i.Conductor.TipoLicencia}}<br/>
+            Categoria de licencia: {{ i.Conductor.CategoriaLicencia}}<br/>
+            Fecha de emisión de licencia de conducir: {{ i.Conductor.FechaEmisionLicencia}}<br/>
+            Fecha de caducidad de licencia de conducir: {{ i.Conductor.FechaCaducidadLicencia}}<br/>
+            Puntos: {{ i.Conductor.Puntos}}<br/><br/>
+
+            <i style="color:#FF0000";>Datos del vehículo:</i><br/>
+            Placa: {{ i.Vehiculo.Placa}}<br/>
+            Marca: {{ i.Vehiculo.Marca}}<br/>
+            Tipo: {{ i.Vehiculo.Tipo}}<br/>
+            Color: {{ i.Vehiculo.Color}}<br/>
+            Fecha de matrícula: {{ i.Vehiculo.FechaMatricula}}<br/>
+            Fecha de caducidad de matrícula: {{ i.Vehiculo.FechaCaducidadMatricula}}<br/><br/>
+
+            <i style="color:#FF0000";>Agente de tránsito responsable:</i><br/>
+            Nombres: {{ i.Agente.Nombres }}<br/>
+            Apellidos: {{ i.Agente.Apellidos }}<br/>
+            Cédula: {{ i.Agente.Cedula }}<br/><br/>
+            
+            {%endfor%}
+            <hr class='hrItem' />
+
+        </div>
+
+
+        <div class='details'>
+            <i style="color:#FF0000";>Imágenes:</i><br/><br/>
+            {%for i in foto%}
+             <img height="300" width="300" src="./../media/{{ i.model_pic}}"> </div> <br/> <br/>      
+            {%endfor%}
+            <hr class='hrItem' />
+            <br/><br/>
+             Reporte generado el: {{ hour }}
+        </div>
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,100 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block titulo%}
+Ingreso de reportes
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Ubicación</strong>
+  </div>
+
+</div>
+
+<form method="POST" style="margin-top:5em;  margin-left: 54em; background-color:#F2F2C1" enctype="multipart/form-data">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">{{ message|safe }}</div>
+  {% endfor %}
+  {% endif %}
+            {% csrf_token %}
+          <div class="card-body card-block">
+              <form action="#" method="post" enctype="multipart/form-data" class="form-horizontal text-center">
+                 <div class="row form-group">
+                    <i style="color:#FF0000">Escoja el estado de la impugnación (Tenga en cuenta vez elegida el estado no se puede cambiar)</i>
+                  </div>
+                  <div class="row form-group">
+                     <select name="Estado" id="Estado" value="{{Estado}}" placeholder="Estado">
+                      <option value="Reportado">Reportado</option>
+                      <option value="En impugnación">En impugnación</option>
+                      <option value="Impugnada">Impugnada</option>
+                      <option value="No impugnada">No impugnada</option>
+                    </select>
+                  </div>
+                  &nbsp &nbsp
+                  <div class="row form-group">
+                    <i style="color:#FF0000">INGRESAR EVIDENCIA</i>
+                  </div>
+                    <div class="row form-group">
+                      <div class="col-xs-12 col-md-4">Añadir imagen:{{fotoform.model_pic}}</div>
+
+
+                      <div class="col-xs-12 col-md-4">Añadir audio:{{audform.model_aud}}</div>
+
+                      <div class="col-xs-12 col-md-4">Añadir video:{{vidform.model_vid}}</div>
+                    </div>
+
+
+                  <div class="text-center" style="margin-top:2em;  margin-right: 8em;">
+                      &nbsp &nbsp &nbsp &nbsp
+                      <button type="submit" class="btn btn-primary" style="background-color:#5e2129">Guardar</button>
+                  </div>
+              </form>
+  </div>
+</form>
+
+
+<div id='map'  style="width: 40%; height: 920px;margin-top:0em"></div>
+
+<script type="text/javascript">
+  mapboxgl.accessToken = 'pk.eyJ1IjoidWNvdCIsImEiOiJjanlxMWRpd3AwZmxvM2RtdWFmdzBpdTd6In0.JqU3fJcJP__fO28mMYnYWg';
+</script>
+
+<script type="text/javascript">
+  var cont  =0
+
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [-79.2042236,-3.99313],
+    zoom: 13
+  });
+
+  {% for i in infraccion %}
+  var latitud = "{{i.Longitud }}"
+  var longitud = "{{i.Latitud }}"
+
+  var popup = new mapboxgl.Popup({ offset: 25 }).setText(
+    "Número de  infracción: {{i.NumeroInfraccion}}"+" // Conductor: {{i.Conductor.CedulaC}} {{i.Conductor.Nombres}} {{i.Conductor.Apellidos}}"+" // Vehículo: {{i.Vehiculo.Placa}}"+" // Fecha: {{i.Fecha_Infraccion}}"
+);
+
+  var marker = new mapboxgl.Marker({
+    "color": "#07E904",
+    draggable: false,
+  })
+  .setLngLat([latitud.replace(",","."),longitud.replace(",",".")])
+  .setPopup(popup)
+  .addTo(map);
+  {% endfor %}
+</script>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

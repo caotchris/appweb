@@ -1,0 +1,63 @@
+{% extends 'index.html' %}
+{% block titulo%}
+In
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Información</strong>
+  </div>
+
+  <div class="card-header text-center">
+
+   {% for ced in intentos %}
+
+  <img height="100" width="100" src="./../media/{{ced.Agente.fotoA}}">{{ced.Agente.Nombres}} {{ced.Agente.Apellidos}} <br>
+  <i>{{ced.Agente.Cedula}}</i></td>
+
+  {{ "<!--" }}
+  {% endfor %}
+  {{ "-->" }}
+
+</div>
+
+  <table class="table" frame="void" rules="none"  align="center" cellspacing="0" cellpadding="0" bordercolor="#ffffff" border="0" style="width: 1500px;">
+    <thead class="thead-dark">
+      <tr>
+        <th>Cédula Agente</th>
+        <th>Nombres</th>
+        <th>Ubicación</th>
+        <th>Fecha de intento</th>
+        <th>Hora de intento</th>
+        <th>Ver</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ced in intentos %}
+      <tr>
+        <td>{{ ced.Cedula }}</td>
+        <td>{{ ced.Agente.Nombres }} {{ ced.Agente.Apellidos }}</td>
+        <td>{{ ced.Ubicacion }}</td>
+        <td>{{ ced.Fecha_Intento }}</td>
+        <td>{{ ced.Hora_Intento }}</td>
+        <td><a href="/Gestionar_Infraccion/mapaIntentoaccion/?Intentos={{ced.id}}"><button style="background-color: #FF9900"  type="submit" class="btn btn-primary">Ver</button></a></td>
+        <td>{{ ced.Descripcion }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  </div>
+</div>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

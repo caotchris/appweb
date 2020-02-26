@@ -1,0 +1,57 @@
+{% extends 'index.html' %}
+{% block titulo%}
+Agente de tránsito
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Consulta de Agente </strong><i>(Buscar por cédula del agente)</i>
+  </div>
+  <div class="card-body card-block text-center">
+    <form action="#" method="post" enctype="multipart/
+    form-data" class="form-horizontal">
+    {% csrf_token %}
+    <div class="form-group text-center">
+        <input type="number" name="Cedula" placeholder="Numero de cedula"/ >
+        <input type="submit" value="Buscar" class="btn btn-primary" style="background-color:#5e2129">
+
+    </div>
+  </form>
+  <table class="table" frame="void" rules="none"  align="center" cellspacing="0" cellpadding="0" bordercolor="#ffffff" border="0" style="width: 1500px;">
+    <thead class="thead-dark">
+
+
+      <tr>
+        <th>Foto</th>
+        <th>Codigo agente</th>
+        <th>Cedula</th>
+        <th>Nombres y Apellidos</th>
+        <th>Ver intentos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in agente %}
+      <tr>
+        <td><img height="80" width="80" src="./../media/{{a.fotoA}}"></td>
+        <td>{{ a.Codigo_Agente }}</td>
+        <td>{{ a.Cedula }}</td>
+        <td>{{ a.Nombres }} {{ a.Apellidos}}</td>
+        <td><a href="/Gestionar_Infraccion/listarIntento/?Intentos={{a.Cedula}}"><button style="background-color: #22CEDF"  type="submit" class="btn btn-primary">Ver</button></a></td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+  </div>
+</div>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

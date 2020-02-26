@@ -1,0 +1,105 @@
+{% extends 'index.html' %}
+{% block titulo%}
+Infracción
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Información</strong>
+  </div>
+
+  <div class="card-header text-center">
+    <h1 style="color:#EF0000">DETALLES</h1>
+  </div>
+
+  <table class="table text-center" frame="void" rules="none" cellspacing="0" cellpadding="0" bordercolor="#ffffff" border="0" style="width: 1500px;">
+    <thead class="thead-dark">
+      <tr>
+        <th>Numero de infracción</th>
+        <th>Descripción</th>
+        <th>Ubicación</th>
+        <th>Estado</th>
+        <th>Fecha infracción</th>
+        <th>Hora infracción</th>
+        <th>Hora detención</th>
+        <th>Hora de registro</th>
+        <th>Artículo</th>
+        <th>Inciso</th>
+        <th>Numeral</th>
+        <th>Ver multimedia</th>
+        <th>Nombre agente</th>
+        <th>Cédula agente</th>
+        <th>Ver Mapa</th>
+        <th>Detalles</th>
+        <th>Generar reporte</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for i in infraccion%}
+        <tr>
+          <td>{{ i.NumeroInfraccion}}</td>
+          <td>{{ i.Descripcion }}</td>
+          <td>{{ i.Ubicacion}}</td>
+          <td>{{ i.Estado}}</td>
+          <td>{{ i.Fecha_Infraccion }}</td>
+          <td>{{ i.Hora_Infraccion }}</td>
+          <td>{{ i.Hora_Detencion }}</td>
+          <td>{{ i.Hora_Registro }}</td>
+          <td>{{ i.ArticuloC.Articulo }}</td>
+          <td>{{ i.ArticuloC.Inciso }}</td>
+          <td>{{ i.ArticuloC.Numeral }}</td>
+          <td>
+            <div class="text-center">
+              <a href="/Gestionar_Evidencia/listarEvidencia/?Infraccion_Transito={{i.NumeroInfraccion}}"><button style="background-color: #FF9900"  type="submit" class="btn btn-primary">Buscar</button></a>
+            </div>
+          </td>
+          <td>{{ i.Agente.Nombres }} {{ i.Agente.Apellidos }}</td>
+          <td>{{ i.Agente.Cedula }}</td>
+          <td><a href="/Gestionar_Infraccion/mapaInfraccion/?Infraccion_Transito={{i.NumeroInfraccion}}"><button style="background-color:#2A90F5"  type="submit" class="btn btn-primary">Ver</button></a></td>
+          <td><a href="/Gestionar_Infraccion/Reportesadicionar/?Infraccion_Transito={{i.NumeroInfraccion}}"><button style="background-color: #DF2222"  type="submit" class="btn btn-primary">Ingresar</button></a></td>
+          <td><a href="/Gestionar_Infraccion/GeneratePdf/?Infraccion_Transito={{i.NumeroInfraccion}}"><button style="background-color: #22CEDF"  type="submit" class="btn btn-primary">Reporte</button></a></td>
+        </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+
+  <table class="table" frame="void" rules="none" cellspacing="0" cellpadding="0" bordercolor="#ffffff" border="0" style="width: 1500px;">
+    <thead class="thead-dark">
+      <tr>
+        <th>Vehículo</th>
+        <th>Marca Vehículo</th>
+        <th>Tipo Vehículo</th>
+        <th>Color Vehículo</th>
+        <th>Cédula Conductor</th>
+        <th>Nombre Conductor</th>
+        <th>Licencia Conductor</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for i in infraccion%}
+        <tr>
+          <td>{{ i.Vehiculo.Placa}}</td>
+          <td>{{ i.Vehiculo.Marca}}</td>
+          <td>{{ i.Vehiculo.Tipo}}</td>
+          <td>{{ i.Vehiculo.Color}}</td>
+          <td>{{ i.Conductor.CedulaC}}</td>
+          <td>{{ i.Conductor.Nombres}} {{i.Conductor.Apellidos}}</td>
+          <td>{{ i.Conductor.TipoLicencia}}</td>
+          </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+
+  </div>
+</div>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

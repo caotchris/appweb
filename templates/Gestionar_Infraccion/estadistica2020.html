@@ -1,0 +1,96 @@
+{% extends 'index.html' %}
+{% block titulo%}
+Gráfica infracciones
+{% endblock titulo%}
+{% block body %}
+<form action="#" method="post" enctype="multipart/
+    form-data" class="form-horizontal">
+    {% csrf_token %}
+    <div class="form-group text-center">
+      <i style="color:#FF0000";>Año:</i>
+        &nbsp &nbsp
+        <select name="Ano" value="{{Ano}}" placeholder="Ano">
+          <option value="2019">2019</option>
+          <option value="2020">2020</option>
+        </select>
+        &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+        <i style="color:#FF0000";>Tipo de accidente:</i>
+        &nbsp &nbsp
+        <select name="TipoInfraccion" value="{{TipoInfraccion}}" placeholder="TipoInfraccion">
+          <option value="Art. 383.">Llantas en mal estado</option>
+          <option value="Art. 384.">Sustancias estupefacientes</option>
+          <option value="Art. 385.">Estado de embriaguez</option>
+          <option value="Art. 386.">Primera clase</option>
+          <option value="Art. 387.">Segunda clase</option>
+          <option value="Art. 388.">Tercera clase</option>
+          <option value="Art. 389.">Cuarta clase</option>
+          <option value="Art. 390.">Quinta clase</option>
+          <option value="Art. 391.">Sexta clase</option>
+          <option value="Art. 392.">Séptima clase</option>
+          <option value="Todos">Todos</option>
+        </select>
+        &nbsp &nbsp
+        <button type="submit" class="btn btn-primary" style="background-color:#5e2129">Buscar</button>
+
+        &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+        <a href="/Gestionar_Infraccion/exportar_csv" class="btn btn-default">Descargar reporte</a>
+
+    </div>
+  </form>
+ <!-- <div class="card-body card-block text-center">
+    <h2>Gráfica anual</h2>
+    <img src="/Gestionar_Infraccion/ploti2020/" width="900px" />
+  </div> -->
+
+ <!--  <table class="table" style="background-color:#F4EAE8;">
+    <thead class="thead-dark">
+      <tr>
+        <th>Enero</th>
+        <th>Febrero</th>
+        <th>Marzo</th>
+        <th>Abril</th>
+        <th>Mayo</th>
+        <th>Junio</th>
+        <th>Julio</th>
+        <th>Agosto</th>
+        <th>Septiembre</th>
+        <th>Octubre</th>
+        <th>Noviembre</th>
+        <th>Diciembre</th>
+        <th>Total</th>
+        <th>Destalles</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td>{{ enero }}</td>
+        <td>{{ febrero }}</td>
+        <td>{{ marzo }}</td>
+        <td>{{ abril }}</td>
+        <td>{{ mayo }}</td>
+        <td>{{ junio }}</td>
+        <td>{{ julio }}</td>
+        <td>{{ agosto }}</td>
+        <td>{{ septiembre }}</td>
+        <td>{{ octubre }}</td>
+        <td>{{ noviembre }}</td>
+        <td>{{ diciembre }}</td>
+        <td>{{ total }}</td>
+         <td><a href="/Gestionar_Infraccion/exportar_csv"><button style="background-color: #DF2222"  type="submit" class="btn btn-primary">Descargar</button></a></td>
+      </tr>
+
+
+    </tbody>
+  </table> -->
+  {% if user.groups.all.0.name == "Juez" %}
+  <META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+  {% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+  {% elif user.groups.all.0.name == "Administrador" %}</header><META>
+  <META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+  {% else %}
+  <META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+  {% endif %}
+
+{% endblock body %}

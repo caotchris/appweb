@@ -1,0 +1,56 @@
+{% extends 'index.html' %}
+{% block titulo%}
+Accidente de transito
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Ubicación</strong>
+  </div>
+
+</div>
+
+<div id='map'  style="width: 100%; height: 700px;margin-top:6em"></div>
+
+<script type="text/javascript">
+  mapboxgl.accessToken = 'pk.eyJ1IjoidWNvdCIsImEiOiJjanlxMWRpd3AwZmxvM2RtdWFmdzBpdTd6In0.JqU3fJcJP__fO28mMYnYWg';
+</script>
+
+<script type="text/javascript">
+  var cont  =0
+
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [-79.2042236,-3.99313],
+    zoom: 12
+  });
+
+  {% for a in accidente %}
+  var latitud = "{{a.Longitud }}"
+  var longitud = "{{a.Latitud }}"
+
+  var popup = new mapboxgl.Popup({ offset: 25 }).setText(
+    "Número accidente: {{a.NumeroAccidente}}"+" // Tipo: {{a.TipoAccidente}}"+" // Fecha: {{a.Fecha}}"
+);
+
+  var marker = new mapboxgl.Marker({
+    "color": "#b40219",
+    draggable: false,
+  })
+  .setLngLat([latitud.replace(",","."),longitud.replace(",",".")])
+  .setPopup(popup)
+  .addTo(map);
+  {% endfor %}
+</script>
+
+{% if user.groups.all.0.name == "Juez" %}
+
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

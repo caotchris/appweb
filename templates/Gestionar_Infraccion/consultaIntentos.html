@@ -1,0 +1,78 @@
+{% extends 'index.html' %}
+{% block titulo%}
+Intentos
+{% endblock titulo%}
+{% block body %}
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Consulta de intentos </strong><i>(Buscar por número de cédula)</i>
+  </div>
+  <div class="card-body card-block text-center">
+    <form action="#" method="post" enctype="multipart/
+    form-data" class="form-horizontal">
+    {% csrf_token %}
+    <div class="form-group text-center">
+        <input type="number" name="Cedula" value="{{Cedula}}"  placeholder="Numero Cédula"/ >
+        <input type="submit" value="Buscar" class="btn btn-primary" style="background-color:#5e2129">
+        &nbsp &nbsp &nbsp &nbsp
+        <i style="color:#FF0000";>FECHA:</i>
+        &nbsp &nbsp
+        <i>Fecha inicio</i>
+        <input type="date" id="FechaInicio" name="FechaInicio"   placeholder="Fecha Inicio"/>
+        &nbsp &nbsp
+        <i>Fecha fin</i>
+        <input type="date" id="FechaFin" name="FechaFin"   placeholder="Fecha Fin"/>
+        <button type="submit" class="btn btn-primary" style="background-color:#5e2129">Buscar</button>
+         &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+        <a href="/Gestionar_Infraccion/exportar_csv_intentos" class="btn btn-default">Descargar reporte</a>
+
+    </div>
+  </form>
+  <table class="table" frame="void" rules="none"  align="center" cellspacing="0" cellpadding="0" bordercolor="#ffffff" border="0" style="width: 1500px;">
+    <thead class="thead-dark">
+      <tr>
+        <th>Foto</th>
+        <th>Cédula Agente</th>
+        <th>Nombres</th>
+        <th>Ubicación</th>
+        <th>Fecha de intento</th>
+        <th>Hora de intento</th>
+        <th>Ver en mapa</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ced in intentos %}
+      <tr>
+        <td> <a href="/Gestionar_Infraccion/listarIntento/?Intentos={{ced.Cedula}}"><button><img height="80" width="80" src="./../media/{{ced.Agente.fotoA}}"></td>
+        <td>{{ ced.Cedula }}</td>
+        <td>{{ ced.Agente.Nombres }} {{ ced.Agente.Apellidos }}</td>
+        <td>{{ ced.Ubicacion }}</td>
+        <td>{{ ced.Fecha_Intento }}</td>
+        <td>{{ ced.Hora_Intento }}</td>
+        <td><a href="/Gestionar_Infraccion/mapaIntento/?Intentos={{ced.id}}"><button style="background-color: #FF9900"  type="submit" class="btn btn-primary">Ver</button></a></td>
+        <td>
+
+          <form method="POST">
+            {% csrf_token %}
+
+      </form>
+
+      </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  </div>
+</div>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

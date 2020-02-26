@@ -1,0 +1,358 @@
+{% extends 'indexaux.html' %}
+{% block titulo %}
+Infracciones tránsito
+{% endblock titulo %}
+
+<head>
+  <meta charset='utf-8' />
+  <title>Create a draggable Marker</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    body { margin:0; padding:0; }
+    #map { position:absolute; top:0; bottom:0; width:100%; }
+  </style>
+
+</head>
+
+{% block body %}
+{% if error %}
+<h2>{{ error }}</h2>
+{% else %}
+<div class="card">
+
+  <div class="card-header text-center">
+    <strong>Formulario de Registro/Información General</strong>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card-body card-block">
+      <form action="#" method="post" enctype="multipart/form-data" class="form-horizontal">
+         <input type="hidden" name="ContadorInf" id="ContadorInf"/>
+        <div class="row form-group" id="recargar">
+          <div class="col-xs-12 col-md-6">
+            Cédula Agente: <input  type="text" name="CedulaAgente"  id="CedulaAgente" />
+            <input type="button" value="Buscar" onclick="Consultar()" style="background-color:#5e2129; color:#FFFFFF"/>
+          </div>
+          <div class="col-xs-12 col-md-3">{{infraccion_transito_form.NumeroInfraccion.label}}: {{infraccion_transito_form.NumeroInfraccion}}</div>
+          &nbsp &nbsp&nbsp &nbsp&nbsp &nbsp&nbsp &nbsp&nbsp &nbsp
+          <div class="col-xs-12 col-md-3">{{agenteform.Cedula.label}}: {{agenteform.Cedula}}</div>
+          <div class="col-xs-12 col-md-3">{{agenteform.Nombres.label}}: {{agenteform.Nombres}}</div>
+          <div class="col-xs-12 col-md-3">{{agenteform.Apellidos.label}}: {{agenteform.Apellidos}}</div>
+        </div>
+
+        <div class="card-header text-center">
+          <strong>Información/Conductor</strong>
+        </div>
+        &nbsp &nbsp
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-6">Cédula Conductor: <input type="number" name="CedulaConductor"  id="CedulaConductor" />
+            <input type="button" value="Buscar" onclick="ConsultarC()" style="background-color:#5e2129; color:#FFFFFF"/>
+          </div>
+        </div>
+        <div class="row form-group" id ="cdn">
+          <div class="col-xs-12 col-md-3">{{conductorform.CedulaC.label}}:{{conductorform.CedulaC}}</div>
+          <div class="col-xs-12 col-md-3">{{conductorform.Nombres.label}}:{{conductorform.Nombres}}</div>
+          <div class="col-xs-12 col-md-3">{{conductorform.Apellidos.label}}:{{conductorform.Apellidos}}</div>
+          <div class="col-xs-12 col-md-3">{{conductorform.TipoLicencia.label}}:{{conductorform.TipoLicencia}}</div>
+        </div>
+        <div class="row form-group" id ="cdn">
+          <div class="col-xs-12 col-md-3">{{conductorform.CategoriaLicencia.label}}:{{conductorform.CategoriaLicencia}}</div>
+          <div class="col-xs-12 col-md-3">{{conductorform.FechaEmisionLicencia.label}}:{{conductorform.FechaEmisionLicencia}}</div>
+          <div class="col-xs-12 col-md-3">{{conductorform.FechaCaducidadLicencia.label}}:{{conductorform.FechaCaducidadLicencia}}</div>
+          <div class="col-xs-12 col-md-3">{{conductorform.Puntos.label}}:{{conductorform.Puntos}}</div>
+          <div class="col-xs-12 col-md-3"></div>
+        </div>
+
+        <div class="card-header text-center">
+          <strong>Información/Vehículo</strong>
+        </div>
+        &nbsp &nbsp
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-6">Placa: <input type="text" name="Ce"  id="CedulaAgen" />
+            <input type="button" value="Buscar" onclick="ConsultarV()" style="background-color:#5e2129; color:#FFFFFF"/>
+          </div>
+        </div>
+        <div class="row form-group" id = "cdn">
+          <div class="col-xs-12 col-md-3">{{vehiculoform.Placa.label}}:{{vehiculoform.Placa}}</div>
+          <div class="col-xs-12 col-md-3">{{vehiculoform.Marca.label}}:{{vehiculoform.Marca}}</div>
+          <div class="col-xs-12 col-md-3">{{vehiculoform.Tipo.label}}:{{vehiculoform.Tipo}}</div>
+          <div class="col-xs-12 col-md-3">{{vehiculoform.Color.label}}:{{vehiculoform.Color}}</div>
+        </div>
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-3">{{vehiculoform.FechaMatricula.label}}:{{vehiculoform.FechaMatricula}}</div>
+          <div class="col-xs-12 col-md-3">{{vehiculoform.FechaCaducidadMatricula.label}}:{{vehiculoform.FechaCaducidadMatricula}}</div>
+        </div>
+
+        <div class="card-header text-center">
+          <strong>Descripción de la infracción de tránsito</strong>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-3">{{ infraccion_transito_form.Descripcion.label }}:{{ infraccion_transito_form.Descripcion }}</div>
+          <div class="col-xs-12 col-md-3">{{ infraccion_transito_form.Ubicacion.label }}:{{ infraccion_transito_form.Ubicacion }}</div>
+          <div class="col-xs-12 col-md-3">{{ infraccion_transito_form.Hora_Infraccion.label }}:{{ infraccion_transito_form.Hora_Infraccion }}</div>
+          <div class="col-xs-12 col-md-3">{{ infraccion_transito_form.Hora_Detencion.label }}:{{ infraccion_transito_form.Hora_Detencion }}</div>
+          <div class="col-xs-12 col-md-3">{{ infraccion_transito_form.Estado.label }}:{{ infraccion_transito_form.Estado }}</div>
+          <div class="col-xs-12 col-md-3">{{ infraccion_transito_form.Fecha_Infraccion.label }}:<input class= "form-control", type="date" id="Fecha_Infraccion" name="Fecha_Infraccion"   placeholder="Fecha_Infraccion"/ ></div>
+        </div>
+        <span>Elija la ubicación:</span>
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-6">
+            <div id='map' onchasnge="nuevasCoordenadas()" style="width: 1000px; height: 450px;"></div>
+          </div>
+          <div class="col-xs-12 col-md-6">
+            {{ infraccion_transito_form.Latitud.label }}: {{ infraccion_transito_form.Latitud }}
+            <br>
+            <br>
+            {{ infraccion_transito_form.Longitud.label }}: {{ infraccion_transito_form.Longitud }}
+          </div>
+        </div>
+
+
+<div class="row form-group" style="margin-top: 300px">
+
+
+ <style>
+      .coordinates {
+        background: rgba(0,0,0,0.5);
+        color: #fff;
+        position: absolute;
+        bottom: 40px;
+        left: 10px;
+        padding:5px 10px;
+        margin: 0;
+        font-size: 11px;
+        line-height: 18px;
+        border-radius: 3px;
+        display: none;
+      }
+           </style>
+
+
+        <pre id="coordinates" class="coordinates"></pre>
+
+        <script>
+          mapboxgl.accessToken = 'pk.eyJ1IjoidWNvdCIsImEiOiJjanlxMWRpd3AwZmxvM2RtdWFmdzBpdTd6In0.JqU3fJcJP__fO28mMYnYWg';
+        var coordinates = document.getElementById('coordinates');
+        var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [-79.205955, -4.002798],
+        zoom: 14
+        });
+
+        var marker = new mapboxgl.Marker({
+        draggable: true
+        })
+        .setLngLat([-79.205955, -4.002798])
+        .addTo(map);
+
+        function onDragEnd() {
+        var lngLat = marker.getLngLat();
+        coordinates.style.display = 'block';
+        coordinates.innerHTML =
+        'Longitude: ' + lngLat.lng + '<br />Latitude: ' + lngLat.lat;
+        $("#id_Latitud").val(lngLat.lat);
+        $("#id_Longitud").val(lngLat.lng);
+        }
+
+        marker.on('dragend', onDragEnd);
+        </script>
+
+</div>
+
+
+        </div>
+        &nbsp
+        <div class="row form-group">
+          <div class="col col-md-3">{{infraccion_transito_form.Inciso.label}}</div>
+          <div class="col-12 col-md-9">{{infraccion_transito_form.Inciso}}</div>
+        </div>
+        <div class="card-header text-center">
+          <strong>Artículos/COIP</strong>
+        </div>
+        &nbsp &nbsp
+
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-6">Digíte el número del artículo: <input type="number" name="ArticuloBD"  id="ArticuloBD" />
+            <input type="button" value="Buscar" onclick="ConsultarA()" style="background-color:#5e2129; color:#FFFFFF"/>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-3">{{articulos_coip_form.Articulo.label}}</div>
+          <div class="col-xs-12 col-md-3">{{articulos_coip_form.Articulo }}</div>
+        </div>
+        &nbsp &nbsp
+
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-6">Digíte el número del inciso: <input type="number" name="IncisoBD"  id="IncisoBD" />
+            <input type="button" value="Buscar" onclick="ConsultarI()" style="background-color:#5e2129; color:#FFFFFF"/>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-3">{{articulos_coip_form.Inciso.label}}</div>
+          <div class="col-xs-12 col-md-3">{{articulos_coip_form.Inciso}}</div>
+        </div>
+        &nbsp &nbsp
+
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-6">Digíte el número del numeral: <input type="number" name="NumerslBD"  id="NumeralBD" />
+            <input type="button" value="Buscar" onclick="ConsultarN()" style="background-color:#5e2129; color:#FFFFFF"/>
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-3">{{articulos_coip_form.Numeral.label}}</div>
+          <div class="col-xs-12 col-md-3">{{articulos_coip_form.Numeral}}</div>
+        </div>
+        &nbsp &nbsp
+
+
+
+        <div class="card-header text-center">
+          <strong>Evidencias</strong>
+        </div>
+        &nbsp &nbsp
+        <div class="row form-group">
+          <div class="col-xs-12 col-md-4">Seleccione una imagen:{{fotoform.model_pic}}</div>
+          <div class="col-xs-12 col-md-4">Seleccione un audio:{{audform.model_aud}}</div>
+          <div class="col-xs-12 col-md-4">Seleccione un video:{{vidform.model_vid}}</div>
+        </div>
+
+              &nbsp &nbsp
+      <div class="text-center">
+        &nbsp &nbsp
+        <button type="submit" class="btn btn-primary" style="background-color:#5e2129">Registrar</button>
+        <button type="reset" class="btn btn-danger">Cancelar</button>
+
+      </div>
+      </form>
+    </div>
+
+  </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+  function Consultar(){
+    let cedula_agente = $("#CedulaAgente").val()
+    let base_url = "http://18.228.40.250/servicio_web/detalleAgente/"
+    let complete_url = base_url + cedula_agente
+    $.ajax({url: complete_url, success: function(result){
+      $("#cedula").val(result.agente.Cedula);
+      $("#nombres").val(result.agente.Nombres);
+      $("#apellidos").val(result.agente.Apellidos);
+    }});
+
+    let cedula_agente1 = $("#CedulaAgente").val()
+    let base_url1 = "http://18.228.40.250/servicio_web/detallecontador/"
+    let complete_url1 = base_url1 + cedula_agente1
+    $.ajax({url: complete_url1, success: function(result){
+      cont = result.contador.ContadorAgente+1;
+      cod = result.contador.CodigoAgente;
+      codigo = cod+""+cont;
+      $("#id_NumeroInfraccion").val(codigo);
+      $("#ContadorInf").val(cont);
+    }});
+  }
+
+
+</script>
+
+<script type="text/javascript">
+  function ConsultarC(){
+    let cedula_conductor = $("#CedulaConductor").val()
+    let base_url = "http://18.228.40.250/servicio_web/detalleConductor/"
+    let complete_url = base_url + cedula_conductor
+    $.ajax({url: complete_url, success: function(result){
+      $("#id_CedulaC").val(result.conductor.CedulaC);
+      $("#id_Nombres").val(result.conductor.Nombres);
+      $("#id_Apellidos").val(result.conductor.Apellidos);
+      $("#id_TipoLicencia").val(result.conductor.TipoLicencia);
+      $("#id_CategoriaLicencia").val(result.conductor.CategoriaLicencia);
+      $("#id_FechaEmisionLicencia").val(result.conductor.FechaEmisionLicencia);
+      $("#id_FechaCaducidadLicencia").val(result.conductor.FechaCaducidadLicencia);
+      $("#id_Puntos").val(result.conductor.Puntos);
+    }});
+  }
+
+</script>
+
+<script type="text/javascript">
+  function ConsultarV(){
+    let placa_vehiculo = $("#CedulaAgen").val()
+    let base_url = "http://18.228.40.250/servicio_web/detalleVehiculo/"
+    let complete_url = base_url + placa_vehiculo
+    $.ajax({url: complete_url, success: function(result){
+      $("#placa").val(result.Placa);
+      $("#marca").val(result.Marca);
+      $("#tipo").val(result.Tipo);
+      $("#id_Color").val(result.Color);
+      $("#id_FechaMatricula").val(result.FechaMatricula);
+      $("#id_FechaCaducidadMatricula").val(result.FechaCaducidadMatricula);
+
+    }});
+  }
+</script>
+
+<script type="text/javascript">
+  function ConsultarA(){
+    let articulos = $("#ArticuloBD").val()
+    let base_url = "http://18.228.40.250/servicio_web/detallearticulos/"
+    let complete_url = base_url + articulos;
+    $.ajax({url: complete_url, success: function(result){
+      $("#articulo").val(result.articulosbd.DescripcionBDA);
+      $("#inciso").val("");
+
+    }});
+  }
+</script>
+
+<script type="text/javascript">
+  function ConsultarI(){
+    let articulos = $("#ArticuloBD").val()
+    let incisos = $("#IncisoBD").val()
+    let ai = articulos+""+incisos;
+    let base_url = "http://18.228.40.250/servicio_web/detalleincisos/"
+    let complete_url = base_url + ai;
+    $.ajax({url: complete_url, success: function(result){
+      $("#inciso").val(result.incisobd.DescripcionBDI);
+
+    }});
+  }
+</script>
+
+<script type="text/javascript">
+  function ConsultarN(){
+    let articulos = $("#ArticuloBD").val()
+    let incisos = $("#IncisoBD").val()
+    let numerales = $("#NumeralBD").val()
+    let an = articulos+""+incisos+""+numerales;
+    let base_url = "http://18.228.40.250/servicio_web/detallenumeral/"
+    let complete_url = base_url + an;
+    $.ajax({url: complete_url, success: function(result){
+      $("#numeral").val(result.numeralbd.DescripcionBDN);
+
+    }});
+  }
+</script>
+
+{% if user.groups.all.0.name == "Juez" %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+
+{% endif %}
+{% endblock body %}

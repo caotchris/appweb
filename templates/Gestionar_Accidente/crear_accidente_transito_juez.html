@@ -1,0 +1,137 @@
+{% extends 'indexjuez.html' %}
+{% block titulo%}
+Accidente de transito
+{% endblock titulo%}
+{% block body %}
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+  <style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:9%; bottom:0; width:100%; }
+  </style>
+<div class="card">
+  <div class="card-header text-center">
+    <strong>Consulta de accidentes </strong>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+    <i style="color:#FF0000";>Accidentes encontrados: {{ contador }} </i>
+  </div>
+  <div class="card-body card-block text-center">
+    <form action="#" method="post" enctype="multipart/
+    form-data" class="form-horizontal">
+    {% csrf_token %}
+    <div class="form-group text-center">
+        <input type="number" name="NumeroAccidente" value="{{NumeroAccidente}}"  placeholder="Numero Accidente"/ >
+        <input type="submit" value="Buscar" class="btn btn-primary" style="background-color:#5e2129">
+        &nbsp &nbsp &nbsp &nbsp
+        <i style="color:#FF0000";>Tipo de accidente:</i>
+        &nbsp &nbsp
+        <select name="TipoAccidente" value="{{TipoAccidente}}" placeholder="Tipo Accidente">
+          <option value="">Ninguno</option>
+          <option value="Choque">Choque</option>
+          <option value="Atropellamiento">Atropellamiento</option>
+          <option value="Volcamiento">Volcamiento</option>
+          <option value="Caida de ocupante">Caida de ocupante</option>
+          <option value="Incendio">Incendio</option>
+          <option value="Otros">Otros</option>
+          <option value="Todos">Todos</option>
+        </select>
+        &nbsp &nbsp &nbsp &nbsp
+        <i style="color:#FF0000";>FECHA:</i>
+        &nbsp &nbsp
+        <i>Fecha inicio</i>
+        <input type="date" id="FechaInicio" name="FechaInicio" placeholder="Fecha Inicio"/>
+        &nbsp &nbsp
+        <i>Fecha fin</i>
+        <input type="date" id="FechaFin" name="FechaFin" placeholder="Fecha Fin"/>
+        <button type="submit" class="btn btn-primary" style="background-color:#5e2129">Buscar</button>
+    </div>
+  </form>
+  <table class="table" style="background-color:#F4EAE8; margin-top:43em">
+    <thead class="thead-dark">
+      <tr>
+        <th>Número de accidente</th>
+        <th>Tipo de accidente</th>
+        <th>Descripcion</th>
+        <th>Ubicacion</th>
+        <th>Latitud/Longitud</th>
+        <th>Estado</th>
+        <th>Fecha</th>
+        <th>Hora de accidente</th>
+        <!-- hora de atencion es igual a la hora de registro -->
+        <th>Hora de atención</th>
+        <th>Agente de tránsito</th>
+        <th>Cédula</th>
+        <<th>Evidencias</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for accidente in accidentes %}
+      <tr>
+        <td>{{ accidente.NumeroAccidente }}</td>
+        <td>{{ accidente.TipoAccidente }}</td>
+        <td>{{ accidente.Descripcion }}</td>
+        <td>{{ accidente.Ubicacion }}</td>
+        <td>{{ accidente.Latitud }}/{{ accidente.Longitud }}</td>
+        <td>{{ accidente.Estado }}</td>
+        <td>{{ accidente.Fecha }}</td>
+        <td>{{ accidente.Hora_Accidente }}</td>
+        <td>{{ accidente.Hora_Registro }}</td>
+        <td>{{ accidente.Agente.Nombres }} {{ accidente.Agente.Apellidos }}</td>
+        <td>{{ accidente.Agente.Cedula }}</td>
+        <td>
+          <div class="text-center">
+            <a href="/Gestionar_Evidencia/listarEvidenciaa/?Accidente_Transito={{accidente.NumeroAccidente}}"><button style="background-color: #FF9900"  type="submit" class="btn btn-primary">Buscar</button></a>
+          </div></td>
+
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div id='map'  style="width: 100%; height: 700px;margin-top:6em"></div>
+
+<script type="text/javascript">
+  mapboxgl.accessToken = 'pk.eyJ1IjoidWNvdCIsImEiOiJjanlxMWRpd3AwZmxvM2RtdWFmdzBpdTd6In0.JqU3fJcJP__fO28mMYnYWg';
+</script>
+
+<script type="text/javascript">
+  var cont  =0
+
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [-79.2042236,-3.99313],
+    zoom: 10
+  });
+
+  {% for a in accidentes %}
+  var latitud = "{{a.Longitud }}"
+  var longitud = "{{a.Latitud }}"
+
+  var popup = new mapboxgl.Popup({ offset: 25 }).setText(
+    "Número accidente: {{a.NumeroAccidente}}"+" // Tipo: {{a.TipoAccidente}}"+" // Fecha: {{a.Fecha}}"
+);
+
+  var marker = new mapboxgl.Marker({
+    "color": "#b40219",
+    draggable: false,
+  })
+  .setLngLat([latitud.replace(",","."),longitud.replace(",",".")])
+  .setPopup(popup)
+  .addTo(map);
+  {% endfor %}
+</script>
+
+{% if user.groups.all.0.name == "Juez" %}
+
+{% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/home/">
+{% elif user.groups.all.0.name == "Administrador" %}</header><META>
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+{% else %}
+<META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+{% endif %}
+{% endblock body %}

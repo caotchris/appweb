@@ -1,0 +1,99 @@
+{% extends 'index.html' %}
+{% block titulo%}
+Gráfica accidentes
+{% endblock titulo%}
+{% block body %}
+
+
+
+
+<!--  <div class="card-body card-block text-center">
+    <h2>Gráfica anual</h2>
+    <img src="/Gestionar_Accidente/plot2020/" width="900px" />
+  </div> -->
+
+
+
+  <form action="#" method="post" enctype="multipart/
+    form-data" class="form-horizontal">
+    {% csrf_token %}
+    <div class="form-group text-center">
+      <i style="color:#FF0000";>Año:</i>
+        &nbsp &nbsp
+        <select name="Ano" value="{{Ano}}" placeholder="Ano">
+          <option value="2019">2019</option>
+          <option value="2020">2020</option>
+        </select>
+        &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+        <i style="color:#FF0000";>Tipo de accidente:</i>
+        &nbsp &nbsp
+        <select name="TipoAccidente" value="{{TipoAccidente}}" placeholder="Tipo Accidente">
+          <option value="">Ninguno</option>
+          <option value="Choque">Choque</option>
+          <option value="Atropellamiento">Atropellamiento</option>
+          <option value="Volcamiento">Volcamiento</option>
+          <option value="Caida del ocupante">Caida del ocupante</option>
+          <option value="Incendio">Incendio</option>
+          <option value="Otros">Otros</option>
+          <option value="Todos">Todos</option>
+        </select>
+        &nbsp &nbsp
+        <button type="submit" class="btn btn-primary" style="background-color:#5e2129">Buscar</button>
+
+        &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+        <a href="/Gestionar_Accidente/exportar_csv" class="btn btn-default">Descargar reporte</a>
+
+    </div>
+  </form>
+
+
+  <!-- <table class="table" style="background-color:#F4EAE8;">
+    <thead class="thead-dark">
+      <tr>
+        <th>Enero</th>
+        <th>Febrero</th>
+        <th>Marzo</th>
+        <th>Abril</th>
+        <th>Mayo</th>
+        <th>Junio</th>
+        <th>Julio</th>
+        <th>Agosto</th>
+        <th>Septiembre</th>
+        <th>Octubre</th>
+        <th>Noviembre</th>
+        <th>Diciembre</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td>{{ enero }}</td>
+        <td>{{ febrero }}</td>
+        <td>{{ marzo }}</td>
+        <td>{{ abril }}</td>
+        <td>{{ mayo }}</td>
+        <td>{{ junio }}</td>
+        <td>{{ julio }}</td>
+        <td>{{ agosto }}</td>
+        <td>{{ septiembre }}</td>
+        <td>{{ octubre }}</td>
+        <td>{{ noviembre }}</td>
+        <td>{{ diciembre }}</td>
+        <td>{{ total }}</td>
+      </tr>
+
+
+    </tbody>
+  </table> -->
+  {% if user.groups.all.0.name == "Juez" %}
+  <META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homejuez/">
+  {% elif user.groups.all.0.name == "Agenteadmin" %}</header><META>
+
+  {% elif user.groups.all.0.name == "Administrador" %}</header><META>
+  <META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/homeadmin/">
+  {% else %}
+  <META HTTP-EQUIV="REFRESH" CONTENT="0; http://18.228.40.250/admin">
+  {% endif %}
+
+{% endblock body %}
